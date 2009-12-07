@@ -2,7 +2,7 @@ package DBIx::RewriteDSN;
 
 use strict;
 use warnings;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use DBI;
 use File::Slurp;
@@ -56,10 +56,10 @@ sub rewrite {
 	}
 
 	if ($new_dsn && $new_dsn ne $dsn) {
-		print STDERR sprintf("Rewrote '%s' to '%s'\n", $dsn, $new_dsn);
+		print STDERR sprintf("Rewrote '%s' to '%s'\n", $dsn, $new_dsn) if ($ENV{DBI_REWRITE_DSN} || "") eq 'verbose';
 		$dsn = $new_dsn;
 	} else {
-		print STDERR sprintf("Didn't rewrite %s\n", $dsn);
+		print STDERR sprintf("Didn't rewrite %s\n", $dsn) if ($ENV{DBI_REWRITE_DSN} || "") eq 'verbose';
 	}
 
 	$dsn;
