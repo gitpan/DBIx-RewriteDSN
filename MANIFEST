@@ -1,6 +1,5 @@
 .gitignore
 Changes
-inc/DBD/SQLite.pm
 inc/Module/Install.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
