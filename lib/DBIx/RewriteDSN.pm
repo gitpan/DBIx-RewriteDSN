@@ -2,7 +2,7 @@ package DBIx::RewriteDSN;
 
 use strict;
 use warnings;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use DBI;
 use File::Slurp;
@@ -50,7 +50,8 @@ sub rewrite {
 
 		my ($match, $rewrite) = split(/\s+/, $_);
 		if ($dsn =~ $match) {
-			$new_dsn = eval(sprintf('"%s"', $rewrite || "")); ## no critic
+			$rewrite =~ s{\\}{\\\\}g;
+			$new_dsn = eval(sprintf('qq{%s}', $rewrite || "")); ## no critic
 			last;
 		}
 	}

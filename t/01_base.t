@@ -1,8 +1,8 @@
 use strict;
-use Test::More tests => 7;
+use Test::More;
 
 use File::Temp;
-eval { use DBD::SQLite; };
+eval 'use DBD::SQLite';
 plan skip_all => "DBD::SQLite is not installed." if $@;
 
 my $fh;
@@ -21,6 +21,7 @@ BEGIN {
 	$fh->print(<<"	EOS");
 		dbi:rewrite:foo dbi:rewrote:foo
 		(dbi:rewrite:through) \$1
+		dbi:rewrite:backslash dbi:rewrite:\\BACKSLASH
 
 		# dbi:rewrite:comment unko
 
@@ -37,6 +38,7 @@ use DBIx::RewriteDSN -file => $fh->filename;
 is DBIx::RewriteDSN::rewrite("dbi:rewrite:foo"), "dbi:rewrote:foo";
 is DBIx::RewriteDSN::rewrite("dbi:rewrite:through"), "dbi:rewrite:through";
 is DBIx::RewriteDSN::rewrite("dbi:rewrite:comment"), "dbi:fallback";
+is DBIx::RewriteDSN::rewrite("dbi:rewrite:backslash"), "dbi:rewrite:\\BACKSLASH";
 
 my $dbh;
 
@@ -57,4 +59,6 @@ DBIx::RewriteDSN->enable;
 
 $dbh = DBI->connect("dbi:SQLite:dbname=$db1name", "", "");
 is $dbh->{Name}, "dbname=$db2name", "re-enable";
+
+done_testing;
 
