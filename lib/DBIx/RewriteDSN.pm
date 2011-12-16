@@ -2,7 +2,7 @@ package DBIx::RewriteDSN;
 
 use strict;
 use warnings;
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use DBI;
 use File::Slurp;
@@ -37,6 +37,12 @@ sub disable {
 	no warnings 'redefine';
 	*DBI::connect = $orig_connect;
 }
+
+sub prepend_rules {
+	my ($class, $rules) = @_;
+	$RULES = $rules . "\n" . $RULES;
+}
+
 
 sub rewrite {
 	my ($dsn) = @_;
@@ -124,6 +130,10 @@ Disable rewrites.
 =head2 DBIx::RewriteDSN->enable
 
 Re-enable rewrites.
+
+=head3 DBIx::RewriteDSN->prepend_rules($rules);
+
+Prepend $rules to current rules.
 
 =head1 RULES
 
